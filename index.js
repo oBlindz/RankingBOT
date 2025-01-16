@@ -1,7 +1,7 @@
 // Importando dependências
 const fs = require("node:fs");
 const path = require("node:path");
-const { Client, Events, GatewayIntentBits, Collection } = require("discord.js");
+const { Client, Events, GatewayIntentBits, Collection, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 const { token } = require("./config.json");
 
 // Declarando Client e suas settings inciais
@@ -52,5 +52,62 @@ client.on(Events.InteractionCreate, async interaction => {
     } else {
       await interaction.reply({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
     }
+  }
+});
+
+// Modal de preenchimento de stats
+client.on(Events.InteractionCreate, async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === 'rating') {
+    const modal = new ModalBuilder()
+      .setTitle('rating')
+      .setCustomId('form-rating');
+
+    // Criando campos
+    const nick = new TextInputBuilder()
+      .setLabel('Digite seu nick')
+      .setStyle(TextInputStyle.Short)
+      .setCustomId('form-rating-nick');
+
+    const kills = new TextInputBuilder()
+      .setLabel('Digite suas kills')
+      .setStyle(TextInputStyle.Short)
+      .setCustomId('form-rating-kills');
+
+    const assists = new TextInputBuilder()
+      .setLabel('Digite suas assistências')
+      .setStyle(TextInputStyle.Short)
+      .setCustomId('form-rating-assists');
+
+    const deaths = new TextInputBuilder()
+      .setLabel('Digite suas mortes')
+      .setStyle(TextInputStyle.Short)
+      .setCustomId('form-rating-deaths');
+
+    const points = new TextInputBuilder()
+      .setLabel('Digite seus pontos')
+      .setStyle(TextInputStyle.Short)
+      .setCustomId('form-rating-points');
+
+    const rounds_win = new TextInputBuilder()
+      .setLabel('Digite quantos rounds você ganhou')
+      .setStyle(TextInputStyle.Short)
+      .setCustomId('form-rating-rw');
+
+    const rounds_lose = new TextInputBuilder()
+      .setLabel('Digite quantos rounds você perdeu')
+      .setStyle(TextInputStyle.Short)
+      .setCustomId('form-rating-rl');
+
+
+    // Criando as linhas
+    const linha = new ActionRowBuilder().addComponents(nick);
+
+    // Adicionando as linhas ao modal
+    modal.addComponents(linha);
+
+    // Exibindo o modal
+    await interaction.showModal(modal);
   }
 });
