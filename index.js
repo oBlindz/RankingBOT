@@ -103,9 +103,21 @@ client.on(Events.InteractionCreate, async interaction => {
 
     // Criando as linhas
     const linha = new ActionRowBuilder().addComponents(nick);
+    const linha1 = new ActionRowBuilder().addComponents(kills);
+    const linha2 = new ActionRowBuilder().addComponents(assists);
+    const linha3 = new ActionRowBuilder().addComponents(deaths);
+    const linha4 = new ActionRowBuilder().addComponents(points);
+    const linha5 = new ActionRowBuilder().addComponents(rounds_win);
+    const linha6 = new ActionRowBuilder().addComponents(rounds_lose);
 
     // Adicionando as linhas ao modal
-    modal.addComponents(linha);
+    modal.addComponents(
+      linha,
+      linha1,
+      linha2,
+      linha3,
+      linha4
+    );
 
     // Exibindo o modal
     await interaction.showModal(modal);
