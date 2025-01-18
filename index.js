@@ -1,7 +1,7 @@
 // Importando dependências
 const fs = require("node:fs");
 const path = require("node:path");
-const { Client, Events, GatewayIntentBits, Collection, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
+const { Client, Events, GatewayIntentBits, Collection, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, MessageFlags } = require("discord.js");
 const { token } = require("./config.json");
 
 // Declarando Client e suas settings inciais
@@ -65,20 +65,20 @@ client.on(Events.InteractionCreate, async interaction => {
       .setCustomId('form-rating');
 
     // Criando campos
-    const nick = new TextInputBuilder()
-      .setLabel('Digite seu nick')
+    const rw = new TextInputBuilder()
+      .setLabel('Digite os rounds ganhos')
       .setStyle(TextInputStyle.Short)
-      .setCustomId('form-rating-nick');
+      .setCustomId('form-rating-rw');
 
     const kills = new TextInputBuilder()
       .setLabel('Digite suas kills')
       .setStyle(TextInputStyle.Short)
       .setCustomId('form-rating-kills');
 
-    const assists = new TextInputBuilder()
-      .setLabel('Digite suas assistências')
+    const rl = new TextInputBuilder()
+      .setLabel('Digite os rounds perdidos')
       .setStyle(TextInputStyle.Short)
-      .setCustomId('form-rating-assists');
+      .setCustomId('form-rating-rl');
 
     const deaths = new TextInputBuilder()
       .setLabel('Digite suas mortes')
@@ -90,25 +90,12 @@ client.on(Events.InteractionCreate, async interaction => {
       .setStyle(TextInputStyle.Short)
       .setCustomId('form-rating-points');
 
-    const rounds_win = new TextInputBuilder()
-      .setLabel('Digite quantos rounds você ganhou')
-      .setStyle(TextInputStyle.Short)
-      .setCustomId('form-rating-rw');
-
-    const rounds_lose = new TextInputBuilder()
-      .setLabel('Digite quantos rounds você perdeu')
-      .setStyle(TextInputStyle.Short)
-      .setCustomId('form-rating-rl');
-
-
     // Criando as linhas
-    const linha = new ActionRowBuilder().addComponents(nick);
-    const linha1 = new ActionRowBuilder().addComponents(kills);
-    const linha2 = new ActionRowBuilder().addComponents(assists);
-    const linha3 = new ActionRowBuilder().addComponents(deaths);
-    const linha4 = new ActionRowBuilder().addComponents(points);
-    const linha5 = new ActionRowBuilder().addComponents(rounds_win);
-    const linha6 = new ActionRowBuilder().addComponents(rounds_lose);
+    const linha = new ActionRowBuilder().addComponents(kills);
+    const linha1 = new ActionRowBuilder().addComponents(deaths);
+    const linha2 = new ActionRowBuilder().addComponents(points);
+    const linha3 = new ActionRowBuilder().addComponents(rw);
+    const linha4 = new ActionRowBuilder().addComponents(rl);
 
     // Adicionando as linhas ao modal
     modal.addComponents(
@@ -122,4 +109,15 @@ client.on(Events.InteractionCreate, async interaction => {
     // Exibindo o modal
     await interaction.showModal(modal);
   }
+});
+
+// Respondendo o modal 
+client.on(Events.InteractionCreate, async interaction => {
+  if (!interaction.isModalSubmit()) return;
+  if (!interaction.customId === 'form-rating') return;
+
+  await interaction.reply({
+    content: 'Suas estatísticas estão sendo calculadas...',
+    lags: MessageFlags.Ephemeral
+  });
 });
